@@ -10,4 +10,13 @@
 
 @interface ViewController : UIViewController
 
+@property (weak, nonatomic) IBOutlet UIButton *launchButton;
+@property (weak, nonatomic) IBOutlet UIButton *sendButton;
+@property (weak, nonatomic) IBOutlet UITextField *messageTextField;
+@property (weak, nonatomic) IBOutlet UITextView *statusTextView;
+
+- (IBAction)hLaunch:(id)sender;
+- (IBAction)hSend:(id)sender;
+- (IBAction)hFocusLost:(id)sender;
+
 @end

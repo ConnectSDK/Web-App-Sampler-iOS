@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EA26C44F18B583E600E02834 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA26C44E18B583E600E02834 /* SystemConfiguration.framework */; };
+		EA26C45118B583F900E02834 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EA26C45018B583F900E02834 /* libicucore.dylib */; };
+		EA26C45318B583FF00E02834 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EA26C45218B583FF00E02834 /* libz.dylib */; };
+		EA26C45518B5840300E02834 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA26C45418B5840300E02834 /* MobileCoreServices.framework */; };
 		EA8C585C18B5822800B22DA3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8C585B18B5822800B22DA3 /* Foundation.framework */; };
 		EA8C585E18B5822800B22DA3 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8C585D18B5822800B22DA3 /* CoreGraphics.framework */; };
 		EA8C586018B5822800B22DA3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8C585F18B5822800B22DA3 /* UIKit.framework */; };
@@ -34,6 +38,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EA26C44E18B583E600E02834 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		EA26C45018B583F900E02834 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
+		EA26C45218B583FF00E02834 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		EA26C45418B5840300E02834 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		EA8C585818B5822800B22DA3 /* Web App Sampler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Web App Sampler.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA8C585B18B5822800B22DA3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		EA8C585D18B5822800B22DA3 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -60,6 +68,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA26C45518B5840300E02834 /* MobileCoreServices.framework in Frameworks */,
+				EA26C45318B583FF00E02834 /* libz.dylib in Frameworks */,
+				EA26C45118B583F900E02834 /* libicucore.dylib in Frameworks */,
+				EA26C44F18B583E600E02834 /* SystemConfiguration.framework in Frameworks */,
 				EA8C585E18B5822800B22DA3 /* CoreGraphics.framework in Frameworks */,
 				EA8C586018B5822800B22DA3 /* UIKit.framework in Frameworks */,
 				EA8C585C18B5822800B22DA3 /* Foundation.framework in Frameworks */,
@@ -101,6 +113,10 @@
 		EA8C585A18B5822800B22DA3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EA26C45418B5840300E02834 /* MobileCoreServices.framework */,
+				EA26C45218B583FF00E02834 /* libz.dylib */,
+				EA26C45018B583F900E02834 /* libicucore.dylib */,
+				EA26C44E18B583E600E02834 /* SystemConfiguration.framework */,
 				EA8C585B18B5822800B22DA3 /* Foundation.framework */,
 				EA8C585D18B5822800B22DA3 /* CoreGraphics.framework */,
 				EA8C585F18B5822800B22DA3 /* UIKit.framework */,
@@ -376,9 +392,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Web App Sampler/Web App Sampler-Prefix.pch";
 				INFOPLIST_FILE = "Web App Sampler/Web App Sampler-Info.plist";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -389,9 +410,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Web App Sampler/Web App Sampler-Prefix.pch";
 				INFOPLIST_FILE = "Web App Sampler/Web App Sampler-Info.plist";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -456,6 +482,7 @@
 				EA8C588C18B5822800B22DA3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EA8C588D18B5822800B22DA3 /* Build configuration list for PBXNativeTarget "Web App SamplerTests" */ = {
 			isa = XCConfigurationList;
@@ -464,6 +491,7 @@
 				EA8C588F18B5822800B22DA3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

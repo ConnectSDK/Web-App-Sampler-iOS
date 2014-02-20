@@ -1,5 +1,6 @@
 # Xcode
 .DS_Store
+build
 */build/*
 *.pbxuser
 !default.pbxuser
@@ -15,7 +16,8 @@ profile
 DerivedData
 .idea/
 *.hmap
-*.xccheckout
 
 #CocoaPods
 Pods
+
+GoogleCast.framework/*
