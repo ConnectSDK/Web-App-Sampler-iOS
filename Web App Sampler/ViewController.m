@@ -9,6 +9,8 @@
 #import "ViewController.h"
 #import <ConnectSDK/ConnectSDK.h>
 
+#define QuickLog(s,...) [self quickLog:(s),##__VA_ARGS__]
+
 @interface ViewController () <UITextFieldDelegate, DevicePickerDelegate, ConnectableDeviceDelegate>
 {
     DiscoveryManager *_discoveryManager;
@@ -23,6 +25,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    QuickLog(@"ViewController::viewDidLoad");
     
     NSArray *webAppCapabilities = @[
                                     kWebAppLauncherLaunch,
@@ -40,6 +44,8 @@
 - (IBAction)hLaunch:(id)sender {
     [self hFocusLost:nil];
     
+    QuickLog(@"ViewController::hLaunch");
+    
     if (!_devicePicker)
     {
         _devicePicker = [_discoveryManager devicePicker];
@@ -53,14 +59,37 @@
     if (self.messageTextField.text.length == 0)
         return;
     
-    [_device.webAppLauncher sendText:self.messageTextField.text success:nil failure:nil];
+    NSString *messageText = self.messageTextField.text;
     
-    [self hFocusLost:nil];
+    QuickLog(@"ViewController::hSend trying to send message: %@", messageText);
+    
+    [_device.webAppLauncher sendText:messageText success:^(id responseObject) {
+        QuickLog(@"ViewController::hSend message sent!");
+    } failure:^(NSError *error) {
+        QuickLog(@"ViewController::hSend message could not be sent: %@", error.localizedDescription);
+    }];
+    
     self.messageTextField.text = @"";
+    [self hFocusLost:nil];
 }
 
 - (IBAction)hFocusLost:(id)sender {
     [self.messageTextField resignFirstResponder];
+}
+
+#pragma mark - Helper methods
+
+- (void) quickLog:(NSString *) format, ...; {
+    va_list ap;
+    
+    va_start(ap, format);
+    NSString *logMessage = [[NSString alloc] initWithFormat:format arguments: ap];
+    va_end(ap);
+    
+    NSLog(@"%@", logMessage);
+    
+    NSString *statusString = [NSString stringWithFormat:@"%@\n%@", logMessage, self.statusTextView.text];
+    self.statusTextView.text = statusString;
 }
 
 - (void) enableFunctions
@@ -95,6 +124,8 @@
 
 - (void)devicePicker:(DevicePicker *)picker didSelectDevice:(ConnectableDevice *)device
 {
+    QuickLog(@"ViewController::devicePicker:didSelectDevice:");
+    
     _device = device;
     _device.delegate = self;
     [_device connect];
@@ -102,29 +133,30 @@
 
 - (void)devicePicker:(DevicePicker *)picker didCancelWithError:(NSError *)error
 {
-    // do nothing
+    QuickLog(@"ViewController::devicePicker:didCancelWithError:");
 }
 
 #pragma mark - ConnectableDeviceDelegate methods
 
 - (void)connectableDeviceReady:(ConnectableDevice *)device
 {
+    QuickLog(@"ViewController::connectableDeviceReady launching app");
+    
     self.launchButton.enabled = NO;
     
     [_device.webAppLauncher launchWebApp:@"6F8A4929" success:^(LaunchSession *launchSession) {
+        QuickLog(@"ViewController::connectableDeviceReady app successfully launched");
         [self enableFunctions];
     } failure:^(NSError *error) {
+        QuickLog(@"ViewController::connectableDeviceReady app failed to launch %@", error.localizedDescription);
         self.launchButton.enabled = YES;
     }];
 }
 
-- (void)connectableDevice:(ConnectableDevice *)device capabilitiesAdded:(NSArray *)added removed:(NSArray *)removed
-{
-    // do nothing
-}
-
 - (void)connectableDeviceDisconnected:(ConnectableDevice *)device withError:(NSError *)error
 {
+    QuickLog(@"ViewController::connectableDeviceDisconnected:withError: %@", error);
+    
     [self disableFunctions];
 }
 
