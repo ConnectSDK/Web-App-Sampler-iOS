@@ -16,6 +16,7 @@
     DiscoveryManager *_discoveryManager;
     DevicePicker *_devicePicker;
     ConnectableDevice *_device;
+    LaunchSession *_launchSession;
 }
 
 @end
@@ -53,6 +54,29 @@
     }
     
     [_devicePicker showPicker:sender];
+}
+
+- (IBAction)hClose:(id)sender {
+    [self hFocusLost:nil];
+    
+    if (!_launchSession)
+        return;
+    
+    QuickLog(@"ViewController::hClose trying to close web app");
+    
+    [_launchSession closeWithSuccess:^(id responseObject) {
+        QuickLog(@"ViewController::hClose web app closed");
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self disableFunctions];
+        });
+        
+        _device.delegate = nil;
+        [_device disconnect];
+        _device = nil;
+    } failure:^(NSError *error) {
+        QuickLog(@"ViewController::hClose could not close web app");
+    }];
 }
 
 - (IBAction)hSend:(id)sender {
@@ -95,6 +119,7 @@
 - (void) enableFunctions
 {
     self.launchButton.enabled = NO;
+    self.closeButton.enabled = YES;
     self.sendButton.enabled = YES;
     self.messageTextField.enabled = YES;
 }
@@ -103,7 +128,11 @@
 {
     [self hFocusLost:nil];
     
+    _launchSession = nil;
     self.launchButton.enabled = YES;
+    self.closeButton.enabled = NO;
+    self.sendButton.enabled = NO;
+    self.messageTextField.enabled = NO;
 }
 
 #pragma mark - UITextFieldDelegate methods
@@ -146,10 +175,18 @@
     
     [_device.webAppLauncher launchWebApp:@"6F8A4929" success:^(LaunchSession *launchSession) {
         QuickLog(@"ViewController::connectableDeviceReady app successfully launched");
-        [self enableFunctions];
+        
+        _launchSession = launchSession;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self enableFunctions];
+        });
     } failure:^(NSError *error) {
         QuickLog(@"ViewController::connectableDeviceReady app failed to launch %@", error.localizedDescription);
-        self.launchButton.enabled = YES;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.launchButton.enabled = YES;
+        });
     }];
 }
 
@@ -157,7 +194,9 @@
 {
     QuickLog(@"ViewController::connectableDeviceDisconnected:withError: %@", error);
     
-    [self disableFunctions];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self disableFunctions];
+    });
 }
 
 @end

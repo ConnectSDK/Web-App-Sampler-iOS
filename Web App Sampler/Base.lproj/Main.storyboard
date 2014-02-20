@@ -13,13 +13,23 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="hVh-XB-ro0">
-                                <rect key="frame" x="20" y="60" width="115" height="30"/>
+                                <rect key="frame" x="20" y="60" width="51" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Launch web app">
+                                <state key="normal" title="Launch">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="hLaunch:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="gd3-dL-Cas"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="inA-Nw-Q8Q">
+                                <rect key="frame" x="140" y="60" width="40" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Close">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="hClose:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="ujo-t8-jCR"/>
                                 </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Type a message to send to the web app" minimumFontSize="17" clearButtonMode="whileEditing" id="A0P-lS-cC4">
@@ -64,6 +74,7 @@
                         </connections>
                     </view>
                     <connections>
+                        <outlet property="closeButton" destination="inA-Nw-Q8Q" id="cFb-8M-QET"/>
                         <outlet property="launchButton" destination="hVh-XB-ro0" id="uFU-e0-u0J"/>
                         <outlet property="messageTextField" destination="A0P-lS-cC4" id="DcI-gt-ca2"/>
                         <outlet property="sendButton" destination="8qM-sg-7DF" id="Zaq-mL-kr7"/>
