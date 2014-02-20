@@ -20,22 +20,7 @@
 		EA8C586F18B5822800B22DA3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA8C586D18B5822800B22DA3 /* Main.storyboard */; };
 		EA8C587218B5822800B22DA3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8C587118B5822800B22DA3 /* ViewController.m */; };
 		EA8C587418B5822800B22DA3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA8C587318B5822800B22DA3 /* Images.xcassets */; };
-		EA8C587B18B5822800B22DA3 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8C587A18B5822800B22DA3 /* XCTest.framework */; };
-		EA8C587C18B5822800B22DA3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8C585B18B5822800B22DA3 /* Foundation.framework */; };
-		EA8C587D18B5822800B22DA3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8C585F18B5822800B22DA3 /* UIKit.framework */; };
-		EA8C588518B5822800B22DA3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EA8C588318B5822800B22DA3 /* InfoPlist.strings */; };
-		EA8C588718B5822800B22DA3 /* Web_App_SamplerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8C588618B5822800B22DA3 /* Web_App_SamplerTests.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		EA8C587E18B5822800B22DA3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EA8C585018B5822800B22DA3 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = EA8C585718B5822800B22DA3;
-			remoteInfo = "Web App Sampler";
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		EA26C44E18B583E600E02834 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -56,11 +41,7 @@
 		EA8C587018B5822800B22DA3 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		EA8C587118B5822800B22DA3 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		EA8C587318B5822800B22DA3 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		EA8C587918B5822800B22DA3 /* Web App SamplerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Web App SamplerTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA8C587A18B5822800B22DA3 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		EA8C588218B5822800B22DA3 /* Web App SamplerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Web App SamplerTests-Info.plist"; sourceTree = "<group>"; };
-		EA8C588418B5822800B22DA3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		EA8C588618B5822800B22DA3 /* Web_App_SamplerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Web_App_SamplerTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,16 +59,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		EA8C587618B5822800B22DA3 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				EA8C587B18B5822800B22DA3 /* XCTest.framework in Frameworks */,
-				EA8C587D18B5822800B22DA3 /* UIKit.framework in Frameworks */,
-				EA8C587C18B5822800B22DA3 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -95,7 +66,6 @@
 			isa = PBXGroup;
 			children = (
 				EA8C586118B5822800B22DA3 /* Web App Sampler */,
-				EA8C588018B5822800B22DA3 /* Web App SamplerTests */,
 				EA8C585A18B5822800B22DA3 /* Frameworks */,
 				EA8C585918B5822800B22DA3 /* Products */,
 			);
@@ -105,7 +75,6 @@
 			isa = PBXGroup;
 			children = (
 				EA8C585818B5822800B22DA3 /* Web App Sampler.app */,
-				EA8C587918B5822800B22DA3 /* Web App SamplerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -150,24 +119,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		EA8C588018B5822800B22DA3 /* Web App SamplerTests */ = {
-			isa = PBXGroup;
-			children = (
-				EA8C588618B5822800B22DA3 /* Web_App_SamplerTests.m */,
-				EA8C588118B5822800B22DA3 /* Supporting Files */,
-			);
-			path = "Web App SamplerTests";
-			sourceTree = "<group>";
-		};
-		EA8C588118B5822800B22DA3 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				EA8C588218B5822800B22DA3 /* Web App SamplerTests-Info.plist */,
-				EA8C588318B5822800B22DA3 /* InfoPlist.strings */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -188,24 +139,6 @@
 			productReference = EA8C585818B5822800B22DA3 /* Web App Sampler.app */;
 			productType = "com.apple.product-type.application";
 		};
-		EA8C587818B5822800B22DA3 /* Web App SamplerTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = EA8C588D18B5822800B22DA3 /* Build configuration list for PBXNativeTarget "Web App SamplerTests" */;
-			buildPhases = (
-				EA8C587518B5822800B22DA3 /* Sources */,
-				EA8C587618B5822800B22DA3 /* Frameworks */,
-				EA8C587718B5822800B22DA3 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				EA8C587F18B5822800B22DA3 /* PBXTargetDependency */,
-			);
-			name = "Web App SamplerTests";
-			productName = "Web App SamplerTests";
-			productReference = EA8C587918B5822800B22DA3 /* Web App SamplerTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -214,11 +147,6 @@
 			attributes = {
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Connect SDK";
-				TargetAttributes = {
-					EA8C587818B5822800B22DA3 = {
-						TestTargetID = EA8C585718B5822800B22DA3;
-					};
-				};
 			};
 			buildConfigurationList = EA8C585318B5822800B22DA3 /* Build configuration list for PBXProject "Web App Sampler" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -234,7 +162,6 @@
 			projectRoot = "";
 			targets = (
 				EA8C585718B5822800B22DA3 /* Web App Sampler */,
-				EA8C587818B5822800B22DA3 /* Web App SamplerTests */,
 			);
 		};
 /* End PBXProject section */
@@ -247,14 +174,6 @@
 				EA8C587418B5822800B22DA3 /* Images.xcassets in Resources */,
 				EA8C586618B5822800B22DA3 /* InfoPlist.strings in Resources */,
 				EA8C586F18B5822800B22DA3 /* Main.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		EA8C587718B5822800B22DA3 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				EA8C588518B5822800B22DA3 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -271,23 +190,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		EA8C587518B5822800B22DA3 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				EA8C588718B5822800B22DA3 /* Web_App_SamplerTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		EA8C587F18B5822800B22DA3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = EA8C585718B5822800B22DA3 /* Web App Sampler */;
-			targetProxy = EA8C587E18B5822800B22DA3 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		EA8C586418B5822800B22DA3 /* InfoPlist.strings */ = {
@@ -304,14 +207,6 @@
 				EA8C586E18B5822800B22DA3 /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		EA8C588318B5822800B22DA3 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				EA8C588418B5822800B22DA3 /* en */,
-			);
-			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -423,46 +318,6 @@
 			};
 			name = Release;
 		};
-		EA8C588E18B5822800B22DA3 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Web App Sampler.app/Web App Sampler";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Web App Sampler/Web App Sampler-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "Web App SamplerTests/Web App SamplerTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Debug;
-		};
-		EA8C588F18B5822800B22DA3 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Web App Sampler.app/Web App Sampler";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Web App Sampler/Web App Sampler-Prefix.pch";
-				INFOPLIST_FILE = "Web App SamplerTests/Web App SamplerTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -480,15 +335,6 @@
 			buildConfigurations = (
 				EA8C588B18B5822800B22DA3 /* Debug */,
 				EA8C588C18B5822800B22DA3 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		EA8C588D18B5822800B22DA3 /* Build configuration list for PBXNativeTarget "Web App SamplerTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				EA8C588E18B5822800B22DA3 /* Debug */,
-				EA8C588F18B5822800B22DA3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
