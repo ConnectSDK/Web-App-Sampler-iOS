@@ -27,7 +27,7 @@
 {
     [super viewDidLoad];
     
-    QuickLog(@"ViewController::viewDidLoad");
+    NSLog(@"ViewController::viewDidLoad");
     
     NSArray *webAppCapabilities = @[
                                     kWebAppLauncherLaunch,
@@ -44,7 +44,9 @@
 
 - (IBAction)hLaunch:(id)sender {
     [self hFocusLost:nil];
-    
+
+    self.statusTextView.text = @"";
+
     QuickLog(@"ViewController::hLaunch");
     
     if (!_devicePicker)
@@ -67,10 +69,8 @@
     [_launchSession closeWithSuccess:^(id responseObject) {
         QuickLog(@"ViewController::hClose web app closed");
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self disableFunctions];
-        });
-        
+        [self disableFunctions];
+
         _device.delegate = nil;
         [_device disconnect];
         _device = nil;
@@ -87,7 +87,7 @@
     
     QuickLog(@"ViewController::hSend trying to send message: %@", messageText);
     
-    [_device.webAppLauncher sendText:messageText success:^(id responseObject) {
+    [_device.webAppLauncher sendText:messageText toApp:_launchSession success:^(id responseObject) {
         QuickLog(@"ViewController::hSend message sent!");
     } failure:^(NSError *error) {
         QuickLog(@"ViewController::hSend message could not be sent: %@", error.localizedDescription);
@@ -173,20 +173,26 @@
     
     self.launchButton.enabled = NO;
     
-    [_device.webAppLauncher launchWebApp:@"6F8A4929" success:^(LaunchSession *launchSession) {
+    [_device.webAppLauncher launchWebApp:@"6F8A4929" success:^(LaunchSession *launchSession) { // 6F8A4929, 07EAAB14
         QuickLog(@"ViewController::connectableDeviceReady app successfully launched");
         
-        _launchSession = launchSession;
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
+        [_device.webAppLauncher connectToWebApp:launchSession messageCallback:^(id message)
+        {
+            QuickLog(@"ViewController::connectableDeviceReady received message from device: %@", message);
+        } success:^(id responseObject)
+        {
+            QuickLog(@"ViewController::connectableDeviceReady successfully connected to app");
+
+            _launchSession = launchSession;
             [self enableFunctions];
-        });
+        } failure:^(NSError *error)
+        {
+            QuickLog(@"ViewController::connectableDeviceReady failed to connect to app %@", error.localizedDescription);
+        }];
     } failure:^(NSError *error) {
         QuickLog(@"ViewController::connectableDeviceReady app failed to launch %@", error.localizedDescription);
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.launchButton.enabled = YES;
-        });
+        self.launchButton.enabled = YES;
     }];
 }
 
@@ -194,9 +200,7 @@
 {
     QuickLog(@"ViewController::connectableDeviceDisconnected:withError: %@", error);
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self disableFunctions];
-    });
+    [self disableFunctions];
 }
 
 @end
