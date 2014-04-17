@@ -3,7 +3,14 @@
 //  Web App Sampler
 //
 //  Created by Jeremy White on 2/19/14.
-//  Copyright (c) 2014 Connect SDK. All rights reserved.
+//  Connect SDK Sample App by LG Electronics
+//
+//  To the extent possible under law, the person who associated CC0 with
+//  this sample app has waived all copyright and related or neighboring rights
+//  to the sample app.
+//
+//  You should have received a copy of the CC0 legalcode along with this
+//  work. If not, see http://creativecommons.org/publicdomain/zero/1.0/.
 //
 
 #import "ViewController.h"
@@ -11,12 +18,12 @@
 
 #define QuickLog(s,...) [self quickLog:(s),##__VA_ARGS__]
 
-@interface ViewController () <UITextFieldDelegate, DevicePickerDelegate, ConnectableDeviceDelegate>
+@interface ViewController () <UITextFieldDelegate, DevicePickerDelegate, ConnectableDeviceDelegate, WebAppSessionDelegate>
 {
     DiscoveryManager *_discoveryManager;
     DevicePicker *_devicePicker;
     ConnectableDevice *_device;
-    LaunchSession *_launchSession;
+    WebAppSession *_webAppSession;
 }
 
 @end
@@ -61,12 +68,12 @@
 - (IBAction)hClose:(id)sender {
     [self hFocusLost:nil];
     
-    if (!_launchSession)
+    if (!_webAppSession)
         return;
     
     QuickLog(@"ViewController::hClose trying to close web app");
     
-    [_launchSession closeWithSuccess:^(id responseObject) {
+    [_webAppSession closeWithSuccess:^(id responseObject) {
         QuickLog(@"ViewController::hClose web app closed");
         
         [self disableFunctions];
@@ -87,7 +94,7 @@
     
     QuickLog(@"ViewController::hSend trying to send message: %@", messageText);
     
-    [_device.webAppLauncher sendText:messageText toApp:_launchSession success:^(id responseObject) {
+    [_webAppSession sendText:messageText success:^(id responseObject) {
         QuickLog(@"ViewController::hSend message sent!");
     } failure:^(NSError *error) {
         QuickLog(@"ViewController::hSend message could not be sent: %@", error.localizedDescription);
@@ -128,7 +135,7 @@
 {
     [self hFocusLost:nil];
     
-    _launchSession = nil;
+    _webAppSession = nil;
     self.launchButton.enabled = YES;
     self.closeButton.enabled = NO;
     self.sendButton.enabled = NO;
@@ -173,17 +180,23 @@
     
     self.launchButton.enabled = NO;
     
-    [_device.webAppLauncher launchWebApp:@"6F8A4929" success:^(LaunchSession *launchSession) { // 6F8A4929, 07EAAB14
+    NSString *webAppId;
+    
+    if ([_device serviceWithName:@"Chromecast"])
+        webAppId = @"6F8A4929"; //@"4F6217BC";
+    else if ([_device serviceWithName:@"webOS TV"])
+        webAppId = @"MediaPlayerTest"; //@"MediaPlayer";
+    
+    [_device.webAppLauncher launchWebApp:webAppId success:^(WebAppSession *webAppSession) {
         QuickLog(@"ViewController::connectableDeviceReady app successfully launched");
         
-        [_device.webAppLauncher connectToWebApp:launchSession messageCallback:^(id message)
+        _webAppSession = webAppSession;
+        
+        [webAppSession connectWithSuccess:^(id responseObject)
         {
-            QuickLog(@"ViewController::connectableDeviceReady received message from device: %@", message);
-        } success:^(id responseObject)
-        {
+            webAppSession.delegate = self;
             QuickLog(@"ViewController::connectableDeviceReady successfully connected to app");
 
-            _launchSession = launchSession;
             [self enableFunctions];
         } failure:^(NSError *error)
         {
@@ -200,6 +213,18 @@
 {
     QuickLog(@"ViewController::connectableDeviceDisconnected:withError: %@", error);
     
+    [self disableFunctions];
+}
+
+#pragma mark - WebAppSessionDelegate
+
+- (void)webAppSession:(WebAppSession *)webAppSession didReceiveMessage:(id)message
+{
+    QuickLog(@"ViewController::connectableDeviceReady received message from device: %@", message);
+}
+
+- (void)webAppSessionDidDisconnect:(WebAppSession *)webAppSession
+{
     [self disableFunctions];
 }
 
