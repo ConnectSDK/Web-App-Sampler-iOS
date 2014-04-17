@@ -183,9 +183,9 @@
     NSString *webAppId;
     
     if ([_device serviceWithName:@"Chromecast"])
-        webAppId = @"6F8A4929"; //@"4F6217BC";
+        webAppId = @"4F6217BC";
     else if ([_device serviceWithName:@"webOS TV"])
-        webAppId = @"MediaPlayerTest"; //@"MediaPlayer";
+        webAppId = @"MediaPlayer";
     
     [_device.webAppLauncher launchWebApp:webAppId success:^(WebAppSession *webAppSession) {
         QuickLog(@"ViewController::connectableDeviceReady app successfully launched");
