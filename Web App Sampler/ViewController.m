@@ -15,6 +15,7 @@
 
 #import "ViewController.h"
 #import <ConnectSDK/ConnectSDK.h>
+#import <ConnectSDK/AirPlayService.h>
 
 #define QuickLog(s,...) [self quickLog:(s),##__VA_ARGS__]
 
@@ -43,6 +44,8 @@
                                     kWebAppLauncherClose
                                     ];
     CapabilityFilter *webAppCapabilityFilter = [CapabilityFilter filterWithCapabilities:webAppCapabilities];
+    
+    [AirPlayService setAirPlayServiceMode:AirPlayServiceModeWebApp];
     
     _discoveryManager = [DiscoveryManager sharedManager];
     [_discoveryManager setCapabilityFilters:@[webAppCapabilityFilter]];
@@ -185,7 +188,9 @@
     if ([_device serviceWithName:@"Chromecast"])
         webAppId = @"4F6217BC";
     else if ([_device serviceWithName:@"webOS TV"])
-        webAppId = @"MediaPlayer";
+        webAppId = @"SampleWebApp";
+    else if ([_device serviceWithName:@"AirPlay"])
+        webAppId = @"http://ec2-54-201-108-205.us-west-2.compute.amazonaws.com/samples/connect-bridge/";
     
     [_device.webAppLauncher launchWebApp:webAppId success:^(WebAppSession *webAppSession) {
         QuickLog(@"ViewController::connectableDeviceReady app successfully launched");
