@@ -19,12 +19,13 @@
 
 #define QuickLog(s,...) [self quickLog:(s),##__VA_ARGS__]
 
-@interface ViewController () <UITextFieldDelegate, DevicePickerDelegate, ConnectableDeviceDelegate, WebAppSessionDelegate>
+@interface ViewController () <UITextFieldDelegate, ConnectableDeviceDelegate, WebAppSessionDelegate>
 {
     DiscoveryManager *_discoveryManager;
     DevicePicker *_devicePicker;
-    ConnectableDevice *_device;
-    WebAppSession *_webAppSession;
+    
+    NSMutableDictionary *_devices;
+    NSMutableDictionary *_webAppSessions;
 }
 
 @end
@@ -59,34 +60,53 @@
 
     QuickLog(@"ViewController::hLaunch");
     
-    if (!_devicePicker)
+    if (_devices)
     {
-        _devicePicker = [_discoveryManager devicePicker];
-        [_devicePicker setDelegate:self];
+        [_devices enumerateKeysAndObjectsUsingBlock:^(id key, ConnectableDevice *device, BOOL *stop) {
+            device.delegate = nil;
+            [device disconnect];
+        }];
     }
     
-    [_devicePicker showPicker:sender];
+    _devices = [NSMutableDictionary new];
+    _webAppSessions = [NSMutableDictionary new];
+    
+    [[_discoveryManager compatibleDevices] enumerateKeysAndObjectsUsingBlock:^(id key, ConnectableDevice *device, BOOL *stop) {
+        device.delegate = self;
+        [device connect];
+        
+        _devices[device.address] = device;
+    }];
+    
+    [self enableFunctions];
 }
 
 - (IBAction)hClose:(id)sender {
     [self hFocusLost:nil];
     
-    if (!_webAppSession)
+    if (!_webAppSessions)
         return;
     
     QuickLog(@"ViewController::hClose trying to close web app");
     
-    [_webAppSession closeWithSuccess:^(id responseObject) {
-        QuickLog(@"ViewController::hClose web app closed");
-        
-        [self disableFunctions];
-
-        _device.delegate = nil;
-        [_device disconnect];
-        _device = nil;
-    } failure:^(NSError *error) {
-        QuickLog(@"ViewController::hClose could not close web app");
+    [_webAppSessions enumerateKeysAndObjectsUsingBlock:^(NSString *address, WebAppSession *webAppSession, BOOL *stop) {
+        [webAppSession closeWithSuccess:^(id responseObject) {
+            QuickLog(@"ViewController::hClose web app closed");
+            
+            ConnectableDevice *device = _devices[address];
+            
+            if (device)
+            {
+                device.delegate = nil;
+                [device disconnect];
+                [_devices removeObjectForKey:address];
+            }
+        } failure:^(NSError *error) {
+            QuickLog(@"ViewController::hClose could not close web app");
+        }];
     }];
+    
+    [self disableFunctions];
 }
 
 - (IBAction)hSend:(id)sender {
@@ -97,10 +117,12 @@
     
     QuickLog(@"ViewController::hSend trying to send message: %@", messageText);
     
-    [_webAppSession sendText:messageText success:^(id responseObject) {
-        QuickLog(@"ViewController::hSend message sent!");
-    } failure:^(NSError *error) {
-        QuickLog(@"ViewController::hSend message could not be sent: %@", error.localizedDescription);
+    [_webAppSessions enumerateKeysAndObjectsUsingBlock:^(id key, WebAppSession *webAppSession, BOOL *stop) {
+        [webAppSession sendText:messageText success:^(id responseObject) {
+            QuickLog(@"ViewController::hSend message sent!");
+        } failure:^(NSError *error) {
+            QuickLog(@"ViewController::hSend message could not be sent: %@", error.localizedDescription);
+        }];
     }];
     
     self.messageTextField.text = @"";
@@ -132,20 +154,34 @@
     self.closeButton.enabled = YES;
     self.sendButton.enabled = YES;
     self.messageTextField.enabled = YES;
+    
+    [self.messageTextField addTarget:self action:@selector(handleTextFieldValueChange:) forControlEvents:UIControlEventEditingChanged];
 }
 
 - (void) disableFunctions
 {
     [self hFocusLost:nil];
     
-    _webAppSession = nil;
     self.launchButton.enabled = YES;
     self.closeButton.enabled = NO;
     self.sendButton.enabled = NO;
     self.messageTextField.enabled = NO;
+    
+    [self.messageTextField removeTarget:self action:@selector(handleTextFieldValueChange:) forControlEvents:UIControlEventEditingChanged];
 }
 
 #pragma mark - UITextFieldDelegate methods
+
+- (void) handleTextFieldValueChange:(UITextField *)textField
+{
+    [_webAppSessions enumerateKeysAndObjectsUsingBlock:^(id key, WebAppSession *webAppSession, BOOL *stop) {
+        [webAppSession sendText:textField.text success:^(id responseObject) {
+            QuickLog(@"ViewController::hSend message sent!");
+        } failure:^(NSError *error) {
+            QuickLog(@"ViewController::hSend message could not be sent: %@", error.localizedDescription);
+        }];
+    }];
+}
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
@@ -159,66 +195,47 @@
     }
 }
 
-#pragma mark - DevicePickerDelegate methods
-
-- (void)devicePicker:(DevicePicker *)picker didSelectDevice:(ConnectableDevice *)device
-{
-    QuickLog(@"ViewController::devicePicker:didSelectDevice:");
-    
-    _device = device;
-    _device.delegate = self;
-    [_device connect];
-}
-
-- (void)devicePicker:(DevicePicker *)picker didCancelWithError:(NSError *)error
-{
-    QuickLog(@"ViewController::devicePicker:didCancelWithError:");
-}
-
 #pragma mark - ConnectableDeviceDelegate methods
 
 - (void)connectableDeviceReady:(ConnectableDevice *)device
 {
     QuickLog(@"ViewController::connectableDeviceReady launching app");
     
-    self.launchButton.enabled = NO;
-    
     NSString *webAppId;
     
-    if ([_device serviceWithName:@"Chromecast"])
+    if ([device serviceWithName:@"Chromecast"])
         webAppId = @"4F6217BC";
-    else if ([_device serviceWithName:@"webOS TV"])
+    else if ([device serviceWithName:@"webOS TV"])
         webAppId = @"SampleWebApp";
-    else if ([_device serviceWithName:@"AirPlay"])
+    else if ([device serviceWithName:@"AirPlay"])
         webAppId = @"http://ec2-54-201-108-205.us-west-2.compute.amazonaws.com/samples/connect-bridge/";
     
-    [_device.webAppLauncher launchWebApp:webAppId success:^(WebAppSession *webAppSession) {
+    if (!webAppId)
+        return;
+    
+    [device.webAppLauncher launchWebApp:webAppId success:^(WebAppSession *webAppSession) {
         QuickLog(@"ViewController::connectableDeviceReady app successfully launched");
         
-        _webAppSession = webAppSession;
+        _webAppSessions[device.address] = webAppSession;
         
         [webAppSession connectWithSuccess:^(id responseObject)
         {
             webAppSession.delegate = self;
             QuickLog(@"ViewController::connectableDeviceReady successfully connected to app");
-
-            [self enableFunctions];
         } failure:^(NSError *error)
         {
             QuickLog(@"ViewController::connectableDeviceReady failed to connect to app %@", error.localizedDescription);
         }];
     } failure:^(NSError *error) {
         QuickLog(@"ViewController::connectableDeviceReady app failed to launch %@", error.localizedDescription);
-        
-        self.launchButton.enabled = YES;
     }];
+    
+    [self enableFunctions];
 }
 
 - (void)connectableDeviceDisconnected:(ConnectableDevice *)device withError:(NSError *)error
 {
     QuickLog(@"ViewController::connectableDeviceDisconnected:withError: %@", error);
-    
-    [self disableFunctions];
 }
 
 #pragma mark - WebAppSessionDelegate
@@ -230,7 +247,6 @@
 
 - (void)webAppSessionDidDisconnect:(WebAppSession *)webAppSession
 {
-    [self disableFunctions];
 }
 
 @end
