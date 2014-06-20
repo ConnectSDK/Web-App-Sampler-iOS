@@ -19,7 +19,7 @@
 
 #define QuickLog(s,...) [self quickLog:(s),##__VA_ARGS__]
 
-@interface ViewController () <UITextFieldDelegate, ConnectableDeviceDelegate, WebAppSessionDelegate>
+@interface ViewController () <UITextFieldDelegate, ConnectableDeviceDelegate, WebAppSessionDelegate, DevicePickerDelegate>
 {
     DiscoveryManager *_discoveryManager;
     DevicePicker *_devicePicker;
@@ -60,25 +60,13 @@
 
     QuickLog(@"ViewController::hLaunch");
     
-    if (_devices)
+    if (!_devicePicker)
     {
-        [_devices enumerateKeysAndObjectsUsingBlock:^(id key, ConnectableDevice *device, BOOL *stop) {
-            device.delegate = nil;
-            [device disconnect];
-        }];
+        _devicePicker = [_discoveryManager devicePicker];
+        _devicePicker.delegate = self;
     }
     
-    _devices = [NSMutableDictionary new];
-    _webAppSessions = [NSMutableDictionary new];
-    
-    [[_discoveryManager compatibleDevices] enumerateKeysAndObjectsUsingBlock:^(id key, ConnectableDevice *device, BOOL *stop) {
-        device.delegate = self;
-        [device connect];
-        
-        _devices[device.address] = device;
-    }];
-    
-    [self enableFunctions];
+    [_devicePicker showPicker:sender];
 }
 
 - (IBAction)hClose:(id)sender {
@@ -131,6 +119,36 @@
 
 - (IBAction)hFocusLost:(id)sender {
     [self.messageTextField resignFirstResponder];
+}
+
+#pragma mark - DevicePickerDelegate
+
+- (void)devicePicker:(DevicePicker *)picker didSelectDevice:(ConnectableDevice *)device
+{
+    // do nothing
+}
+
+- (void)devicePicker:(DevicePicker *)picker didCancelWithError:(NSError *)error
+{
+    if (_devices)
+    {
+        [_devices enumerateKeysAndObjectsUsingBlock:^(id key, ConnectableDevice *device, BOOL *stop) {
+            device.delegate = nil;
+            [device disconnect];
+        }];
+    }
+    
+    _devices = [NSMutableDictionary new];
+    _webAppSessions = [NSMutableDictionary new];
+    
+    [[_discoveryManager compatibleDevices] enumerateKeysAndObjectsUsingBlock:^(id key, ConnectableDevice *device, BOOL *stop) {
+        device.delegate = self;
+        [device connect];
+        
+        _devices[device.address] = device;
+    }];
+    
+    [self enableFunctions];
 }
 
 #pragma mark - Helper methods
